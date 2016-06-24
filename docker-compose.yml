@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  master:
+    image: elasticsearch
+    volumes:
+      - ./config:/usr/share/elasticsearch/config
+      - ./plugins:/usr/share/elasticsearch/plugins
+    ports:
+      - 9200:9200
+      - 9300:9300
+    restart: always
+  es:
+    image: elasticsearch
+    volumes:
+      - ./config:/usr/share/elasticsearch/config
+      - ./plugins:/usr/share/elasticsearch/plugins
+    command: elasticsearch --discovery.zen.ping.unicast.hosts=master
+    restart: always
