@@ -1,19 +1,31 @@
 version: '2'
 
 services:
-  master:
+  elasticsearch:
     image: elasticsearch
     volumes:
-      - ./config:/usr/share/elasticsearch/config
-      - ./plugins:/usr/share/elasticsearch/plugins
+      - ./elastic/config:/usr/share/elasticsearch/config
+      - ./elastic/plugins:/usr/share/elasticsearch/plugins
     ports:
       - 9200:9200
       - 9300:9300
     restart: always
-  es:
+  elasticsearch-nodes:
     image: elasticsearch
     volumes:
-      - ./config:/usr/share/elasticsearch/config
-      - ./plugins:/usr/share/elasticsearch/plugins
-    command: elasticsearch --discovery.zen.ping.unicast.hosts=master
+      - ./elastic/config:/usr/share/elasticsearch/config
+      - ./elastic/plugins:/usr/share/elasticsearch/plugins
+    command: elasticsearch --discovery.zen.ping.unicast.hosts=elasticsearch
     restart: always
+  fluentd:
+    build: fluentd/
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    ports:
+      - '24224:24224'
+  kibana:
+    build: kibana/
+    volumes:
+      - ./kibana/config/kibana.yml:/opt/kibana/config/kibana.yml
+    ports:
+      - '5601:5601'
