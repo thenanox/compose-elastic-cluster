@@ -6,17 +6,23 @@ services:
     volumes:
       - ./elastic/config:/usr/share/elasticsearch/config
       - ./elastic/plugins:/usr/share/elasticsearch/plugins
+      # - ./elastic/data:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
       - 9300:9300
     restart: always
+    environment:
+      - ES_HEAP_SIZE=4g
   elasticsearch-nodes:
     image: elasticsearch
     volumes:
       - ./elastic/config:/usr/share/elasticsearch/config
       - ./elastic/plugins:/usr/share/elasticsearch/plugins
+      # - ./elastic/data-node:/usr/share/elasticsearch/data
     command: elasticsearch --discovery.zen.ping.unicast.hosts=elasticsearch
     restart: always
+    environment:
+      - ES_HEAP_SIZE=2g
   fluentd:
     build: fluentd/
     volumes:

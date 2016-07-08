@@ -14,6 +14,8 @@ RUN gem install fluent-plugin-record-modifier
 EXPOSE 24224
 
 ADD fluent.conf /fluentd/etc/fluent.conf
-ADD SEARCH_ECISTORE_PRD.csv /tmp/SEARCH_ECISTORE_PRD.csv
+ADD ECI/SEARCH_ECISTORE_PRD.csv /tmp/PRD.csv
+ADD ECI/SEARCH_ECISTORE_PRD_MULTI.csv /tmp/PRD_MULTI.csv
+ADD ECI/SEARCH_ECISTORE_SPECIFIC.csv /tmp/SPECIFIC.csv
 
 CMD ["bash", "-c", "/tmp/entrypoint.sh"]
