@@ -13,22 +13,26 @@ services:
     restart: always
     environment:
       - ES_HEAP_SIZE=4g
-  elasticsearch-nodes:
-    image: elasticsearch
+  # elasticsearch-nodes:
+  #   image: elasticsearch
+  #   volumes:
+  #     - ./elastic/config:/usr/share/elasticsearch/config
+  #     - ./elastic/plugins:/usr/share/elasticsearch/plugins
+  #     # - ./elastic/data-node:/usr/share/elasticsearch/data
+  #   command: elasticsearch --discovery.zen.ping.unicast.hosts=elasticsearch
+  #   restart: always
+  #   environment:
+  #     - ES_HEAP_SIZE=2g
+  logstash:
+    build: logstash/
+    command: logstash -f /etc/logstash/conf.d/logstash.conf
     volumes:
-      - ./elastic/config:/usr/share/elasticsearch/config
-      - ./elastic/plugins:/usr/share/elasticsearch/plugins
-      # - ./elastic/data-node:/usr/share/elasticsearch/data
-    command: elasticsearch --discovery.zen.ping.unicast.hosts=elasticsearch
-    restart: always
-    environment:
-      - ES_HEAP_SIZE=2g
-  fluentd:
-    build: fluentd/
-    volumes:
-      - /var/lib/docker/containers:/var/lib/docker/containers
+      - ./logstash/config:/etc/logstash/conf.d
+      - ./logstash/ECI:/tmp/ECI
     ports:
-      - '24224:24224'
+      - "5000:5000"
+    environment:
+      - LS_HEAP_SIZE=2g
   kibana:
     build: kibana/
     volumes:
